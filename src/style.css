@@ -1,3 +1,60 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  root {
+    @apply font-Poppins box-border;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+@layer components {
+  .input-container {
+    @apply flex flex-row gap-[3%] items-center mb-8;
+    .input {
+      @apply flex flex-col max-w-[160px] basis-[30%];
+      label {
+        @apply text-secondary-400 w-full font-bold text-xs leading-6 tracking-[0.15rem];
+      }
+      input {
+        @apply border-secondary-300 border-[1px] rounded-lg px-3 py-4 w-full font-bold text-xl;
+        &:focus-visible {
+          @apply outline-primary outline-[1px] ;
+        }
+      }
+    }
+    .error {
+      @apply text-tertiary text-sm;
+    }
+  }
+
+    .button-container {
+      @apply flex justify-center sm:justify-end relative mb-8 sm:mb-0;
+      &::after {
+        @apply content-[''] absolute top-[50%] translate-y-[-50%] right-0 w-[100%] h-[1px] bg-secondary-300;
+      }
+      
+    }
+
+  #submit {
+    img {
+      @apply w-8 h-8 sm:w-11 sm:h-11;
+    }
+    @apply bg-primary rounded-full p-3 sm:p-6 z-10;
+    &:hover,
+    &:focus-visible {
+      @apply bg-secondary-500;
+    }
+  }
+
+  .result-container{
+    @apply flex gap-3 sm:gap-5 font-extrabold text-[40px] italic sm:text-[104px] max-h-[120px] align-text-top;
+    .result {
+      @apply text-primary;
+    }
+  }
+}
