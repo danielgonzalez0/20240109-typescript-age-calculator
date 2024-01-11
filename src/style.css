@@ -37,7 +37,7 @@
       }
     }
     .input.error input {
-  @apply border-tertiary;
+  @apply border-tertiary text-secondary-500;
 }
   }
 

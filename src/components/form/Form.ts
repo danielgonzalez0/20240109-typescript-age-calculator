@@ -1,3 +1,9 @@
+import {
+  differenceInDays,
+  differenceInMonths,
+  differenceInYears,
+  isValid,
+} from 'date-fns';
 import { ResultDisplay } from '../display/ResultDisplay';
 import { DayInput, Input, MonthInput, YearInput } from './Input';
 
@@ -95,9 +101,9 @@ export class AgeCalculatorForm {
     const monthResult = this.monthResult.initDisplay();
     const yearResult = this.yearResult.initDisplay();
 
-    this.form.appendChild(dayResult);
-    this.form.appendChild(monthResult);
     this.form.appendChild(yearResult);
+    this.form.appendChild(monthResult);
+    this.form.appendChild(dayResult);
   }
 
   displayFormatError(input: HTMLElement) {
@@ -109,7 +115,7 @@ export class AgeCalculatorForm {
     if (!isValid) {
       this.displayFormatError(input.element);
     }
-    return isValid; // Add
+    return isValid; 
   }
 
   isInputValid(inputName: string): boolean {
@@ -125,6 +131,34 @@ export class AgeCalculatorForm {
     }
   }
 
+  calculateExactAge(day: number, month: number, year: number) {
+    const birthDate = new Date(year, month - 1, day);
+
+    if (
+      !isValid(birthDate) ||
+      birthDate.getDate() !== day ||
+      birthDate.getMonth() !== month - 1 ||
+      birthDate.getFullYear() !== year
+    ) {
+      throw new Error('Must be a valid date');
+    }
+    const now = new Date();
+
+    const years = differenceInYears(now, birthDate);
+    birthDate.setFullYear(birthDate.getFullYear() + years);
+
+    const months = differenceInMonths(now, birthDate);
+    birthDate.setMonth(birthDate.getMonth() + months);
+
+    const days = differenceInDays(now, birthDate);
+
+    return {
+      years,
+      months,
+      days,
+    };
+  }
+
   handleFormSubmit() {
     this.form.addEventListener('submit', (event) => {
       event.preventDefault();
@@ -133,10 +167,26 @@ export class AgeCalculatorForm {
       const checkYear = this.isInputValid('year');
 
       if (checkDay && checkMonth && checkYear) {
-        console.log('form submitted');
-        this.dayInput.clearInput(this.dayInput.inputElement);
-        this.monthInput.clearInput(this.monthInput.inputElement);
-        this.yearInput.clearInput(this.yearInput.inputElement);
+        try {
+          const age = this.calculateExactAge(
+            Number(this.dayInput.getInputValue()),
+            Number(this.monthInput.getInputValue()),
+            Number(this.yearInput.getInputValue())
+          );
+
+          this.dayResult.resultSpan.textContent = `${age.days}`;
+          this.monthResult.resultSpan.textContent = `${age.months}`;
+          this.yearResult.resultSpan.textContent = `${age.years}`;
+
+          this.dayInput.clearInput(this.dayInput.inputElement);
+          this.monthInput.clearInput(this.monthInput.inputElement);
+          this.yearInput.clearInput(this.yearInput.inputElement);
+        } catch (error) {
+          this.dayInput.element.classList.add('error');
+          this.monthInput.element.classList.add('error');
+          this.yearInput.element.classList.add('error');
+          this.dayInput.addErrorMessages((error as Error).message);
+        }
       }
     });
   }

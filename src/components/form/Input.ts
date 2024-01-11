@@ -156,7 +156,7 @@ export class MonthInput extends Input {
   }
 }
 export class YearInput extends Input {
-  static START_YEAR = 1970;
+  static START_YEAR = 1900;
 
   constructor(params: InputParams) {
     super(params);
