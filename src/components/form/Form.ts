@@ -1,5 +1,5 @@
 import { ResultDisplay } from '../display/ResultDisplay';
-import { Input } from './Input';
+import { DayInput, Input, MonthInput, YearInput } from './Input';
 
 export class AgeCalculatorForm {
   form: HTMLFormElement;
@@ -15,7 +15,7 @@ export class AgeCalculatorForm {
     this.form = document.createElement('form');
     this.submitButton = document.createElement('button');
 
-    this.dayInput = new Input({
+    this.dayInput = new DayInput({
       type: 'text',
       id: 'day',
       name: 'day',
@@ -23,14 +23,14 @@ export class AgeCalculatorForm {
       label: 'Day',
     });
 
-    this.monthInput = new Input({
+    this.monthInput = new MonthInput({
       type: 'text',
       id: 'month',
       name: 'month',
       placeholder: 'MM',
       label: 'Month',
     });
-    this.yearInput = new Input({
+    this.yearInput = new YearInput({
       type: 'text',
       id: 'year',
       name: 'year',
@@ -41,12 +41,12 @@ export class AgeCalculatorForm {
     this.dayResult = new ResultDisplay('days');
     this.monthResult = new ResultDisplay('months');
     this.yearResult = new ResultDisplay('years');
-    
   }
 
   initForm() {
     this.displayForm();
     this.dayResult.initDisplay();
+    this.handleFormSubmit();
   }
 
   displayForm() {
@@ -91,7 +91,6 @@ export class AgeCalculatorForm {
   }
 
   displayResults() {
-  
     const dayResult = this.dayResult.initDisplay();
     const monthResult = this.monthResult.initDisplay();
     const yearResult = this.yearResult.initDisplay();
@@ -99,5 +98,46 @@ export class AgeCalculatorForm {
     this.form.appendChild(dayResult);
     this.form.appendChild(monthResult);
     this.form.appendChild(yearResult);
+  }
+
+  displayFormatError(input: HTMLElement) {
+    input.classList.add('error');
+  }
+
+  checkInput(input: Input): boolean {
+    const isValid = input.checkInput();
+    if (!isValid) {
+      this.displayFormatError(input.element);
+    }
+    return isValid; // Add
+  }
+
+  isInputValid(inputName: string): boolean {
+    switch (inputName) {
+      case 'day':
+        return this.checkInput(this.dayInput);
+      case 'month':
+        return this.checkInput(this.monthInput);
+      case 'year':
+        return this.checkInput(this.yearInput);
+      default:
+        return true;
+    }
+  }
+
+  handleFormSubmit() {
+    this.form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const checkDay = this.isInputValid('day');
+      const checkMonth = this.isInputValid('month');
+      const checkYear = this.isInputValid('year');
+
+      if (checkDay && checkMonth && checkYear) {
+        console.log('form submitted');
+        this.dayInput.clearInput(this.dayInput.inputElement);
+        this.monthInput.clearInput(this.monthInput.inputElement);
+        this.yearInput.clearInput(this.yearInput.inputElement);
+      }
+    });
   }
 }

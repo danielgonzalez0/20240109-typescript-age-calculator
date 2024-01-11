@@ -9,7 +9,6 @@ export class AgeCalculator {
   formElement: AgeCalculatorForm;
   constructor() {
     this.formElement = new AgeCalculatorForm();
-    // TODO
   }
 
    init() {

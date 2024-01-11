@@ -16,7 +16,7 @@
   .input-container {
     @apply flex flex-row gap-[3%] items-center mb-8;
     .input {
-      @apply flex flex-col max-w-[160px] basis-[30%];
+      @apply flex flex-col max-w-[160px] basis-[30%] relative;
       label {
         @apply text-secondary-400 w-full font-bold text-xs leading-6 tracking-[0.15rem];
       }
@@ -26,14 +26,23 @@
           @apply outline-primary outline-[1px] ;
         }
       }
+      span{
+        @apply absolute top-[90px] right-0 w-[100%] italic
+      }
     }
-    .error {
+    .input.error {
       @apply text-tertiary text-sm;
+      label {
+        @apply text-tertiary;
+      }
     }
+    .input.error input {
+  @apply border-tertiary;
+}
   }
 
     .button-container {
-      @apply flex justify-center sm:justify-end relative mb-8 sm:mb-0;
+      @apply flex justify-center sm:justify-end relative mb-8  mt-16 sm:my-0 ;
       &::after {
         @apply content-[''] absolute top-[50%] translate-y-[-50%] right-0 w-[100%] h-[1px] bg-secondary-300;
       }
