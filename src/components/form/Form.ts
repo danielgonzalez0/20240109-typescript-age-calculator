@@ -133,16 +133,20 @@ export class AgeCalculatorForm {
 
   calculateExactAge(day: number, month: number, year: number) {
     const birthDate = new Date(year, month - 1, day);
-
+    
     if (
       !isValid(birthDate) ||
       birthDate.getDate() !== day ||
       birthDate.getMonth() !== month - 1 ||
       birthDate.getFullYear() !== year
-    ) {
-      throw new Error('Must be a valid date');
-    }
+      ) {
+        throw new Error('Must be a valid date');
+      }
+
     const now = new Date();
+
+    if(now < birthDate) throw new Error("Must be in the past");
+    
 
     const years = differenceInYears(now, birthDate);
     birthDate.setFullYear(birthDate.getFullYear() + years);
